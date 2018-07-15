@@ -1,11 +1,12 @@
 package com.mood.gnimadi.alexandra.moodtracker.Controller;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mood.gnimadi.alexandra.moodtracker.R;
@@ -22,14 +23,18 @@ public class MainActivity extends Activity implements android.view.GestureDetect
             R.drawable.smiley_normal,
             R.drawable.smiley_happy,
             R.drawable.smiley_super_happy};
-    ImageView imageSwipe = (ImageView) findViewById(R.id.draw);
+    String[] mColor={"#ffde3c50","#ff9b9b9b","#a5468ad9","#ffb8e986","#fff9ec4f"};
+
+    ImageView ImageSwipe;
+    LinearLayout Li;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);// lui il enlève
 
-
-        imageSwipe.setImageResource(mDraw[gesture]);
+       ImageSwipe = (ImageView) findViewById(R.id.draw);
+       Li=(LinearLayout)findViewById(R.id.linearlayout);
+       ImageSwipe.setImageResource(mDraw[gesture]);
         mGestureDetector = new GestureDetector(this, this);
         //setContentView(imageSwipe);
 
@@ -71,59 +76,60 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-       Image_Change();
+        gesture++;
+        Image_Change();
+
        return mGestureDetector.onTouchEvent(event);
 
     }
 
    public void Image_Change() {
-        gesture++;
-        imageSwipe.setImageResource(mDraw[gesture]);
-        System.out.println("Ok "+gesture);
-       Toast.makeText(getApplicationContext(),"Image Change",100).show();
 
-    }
+      Toast.makeText(getApplicationContext(),"Image Change",100).show();
 
-}
-
-
-
-//SWIPE UP we add +1 to gesture
-/*
             if (gesture<5 && gesture >=0) {
                 switch (gesture) {
                     case 0:
 
-                        mImage.setImageDrawable(mDraw[gesture]);
+                        ImageSwipe.setImageResource(mDraw[0]);
+                        Li.setBackgroundColor(Color.parseColor(mColor[0]));
                         break;
                     case 1:
-                        mDraw.set(1, R.drawable.smiley_disappointed);
+                        ImageSwipe.setImageResource(mDraw[1]);
+                        Li.setBackgroundColor(Color.parseColor(mColor[1]));
                         break;
                     case 2:
-                        mDraw.set(2, R.drawable.smiley_normal);
+                        ImageSwipe.setImageResource(mDraw[2]);
+                        Li.setBackgroundColor(Color.parseColor(mColor[2]));
                         break;
                     case 3:
-                        mDraw.set(3, R.drawable.smiley_happy);
+                        ImageSwipe.setImageResource(mDraw[3]);
+                        Li.setBackgroundColor(Color.parseColor(mColor[3]));
                         break;
                     case 4:
-                        mDraw.set(4, R.drawable.smiley_super_happy);
+                        ImageSwipe.setImageResource(mDraw[4]);
+                        Li.setBackgroundColor(Color.parseColor(mColor[4]));
                         break;
                     default:
-                        mDraw.set(2, R.drawable.smiley_normal);
+                        ImageSwipe.setImageResource(mDraw[2]);
+                        Li.setBackgroundColor(Color.parseColor(mColor[2]));
                         break;
 
                 }
             }
             else if (gesture >5) {
                 gesture = 0;
-                mDraw.set(0, R.drawable.smiley_sad);
+                ImageSwipe.setImageResource(mDraw[0]);
+                Li.setBackgroundColor(Color.parseColor(mColor[0]));
                 getDrawable(gesture);
             }
-            else (gesture <0){
+            else if (gesture <0){
                 gesture = 4;
-                mDraw.set(4, R.drawable.smiley_super_happy);
-                getResources().getIdentifier(variable,"drawable",getPackageName());
+                ImageSwipe.setImageResource(mDraw[4]);
+                Li.setBackgroundColor(Color.parseColor(mColor[4]));
+
             }
         }
 
-*/
+}
+
