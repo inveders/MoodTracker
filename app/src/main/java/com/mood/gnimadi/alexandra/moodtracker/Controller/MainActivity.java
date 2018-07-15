@@ -1,8 +1,11 @@
 package com.mood.gnimadi.alexandra.moodtracker.Controller;
 
+import android.content.Context;
+import android.gesture.GestureOverlayView;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -32,49 +35,73 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        addListenerOnButton();
+        onTouchEvent();
     }
 
 
 
-    public void addListenerOnButton() {
 
-        mImage = (ImageView) findViewById(R.id.draw);
 
-        mButton = (Button) findViewById(R.id.btnChangeImage);
-        mButton.setOnClickListener(new View.OnClickListener() {
+    public class MyView extends View implements GestureOverlayView.OnGestureListener {
 
-            @Override
-            public void onClick(View arg0) {
-                //mImage.setImageResource(R.drawable.smiley_sad);
+        private GestureDetector mGestureDetector;
+        private int gesture=2;
+        public MyView(Context context) {
+            super(context);
+            mGestureDetector = new GestureDetector(this);
+        }
 
-                gesture=2;
-                //SWIPE UP we add +1 to gesture
+        public boolean onTouchEvent(MotionEvent event) {
+            return mGestureDetector.onTouchEvent(event);
+            Image_Change(gesture++);
 
-               switch(gesture){
-                   case 0 :
-                       mDraw.set(0,R.drawable.smiley_sad);
-                       break;
-                   case 1 :
-                       mDraw.set(1,R.drawable.smiley_disappointed);
-                       break;
-                   case 2 :
-                       mDraw.set(2,R.drawable.smiley_normal);
-                       break;
-                   case 3 :
-                       mDraw.set(3,R.drawable.smiley_happy);
-                       break;
-                   case 4 :
-                       mDraw.set(4,R.drawable.smiley_super_happy);
-                       break;
-                   default:
-                       mDraw.set(2,R.drawable.smiley_normal);
-                       break;
 
             }
 
-        });
+
+        public boolean onDown(MotionEvent arg0) {
+            // Don't forget to return true here to get the following touch events
+            return true;
+        }
+
+        public void Image_Change(int gesture){
+
+            //mImage = (ImageView) findViewById(R.id.draw);
+
+            //SWIPE UP we add +1 to gesture
+
+            if (gesture<5 && gesture >=0) {
+                switch (gesture) {
+                    case 0:
+                        mDraw.set(0, R.drawable.smiley_sad);
+                        break;
+                    case 1:
+                        mDraw.set(1, R.drawable.smiley_disappointed);
+                        break;
+                    case 2:
+                        mDraw.set(2, R.drawable.smiley_normal);
+                        break;
+                    case 3:
+                        mDraw.set(3, R.drawable.smiley_happy);
+                        break;
+                    case 4:
+                        mDraw.set(4, R.drawable.smiley_super_happy);
+                        break;
+                    default:
+                        mDraw.set(2, R.drawable.smiley_normal);
+                        break;
+
+                }
+            }
+            else if (gesture >5) {
+                gesture = 0;
+                mDraw.set(0, R.drawable.smiley_sad);
+            }
+            else (gesture <0){
+                gesture = 4;
+                mDraw.set(4, R.drawable.smiley_super_happy);
+            }
+        }
+
 
     }
-}
-
