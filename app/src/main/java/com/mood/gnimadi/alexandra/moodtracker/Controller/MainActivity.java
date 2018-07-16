@@ -17,7 +17,7 @@ import com.mood.gnimadi.alexandra.moodtracker.R;
 public class MainActivity extends Activity implements android.view.GestureDetector.OnGestureListener {
 
     private GestureDetector mGestureDetector;
-    private int gesture=2;
+    private int gesture=3;
 
     int[] mDraw = {
             R.drawable.smiley_sad,
@@ -77,6 +77,8 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     }
 
+    /**Method onFling is use to detect the vertical swipe and choode the good action (gesture++ or gesture--)
+     * This method permit too to disabled horizontal swipe*/
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
@@ -112,7 +114,8 @@ public class MainActivity extends Activity implements android.view.GestureDetect
         return mGestureDetector.onTouchEvent(event);
 
     }
-
+    /**Method to call a changement of the image
+     * This method is placed into the gestures detector methods*/
     public void Image_Change() {
 
         //Toast.makeText(getApplicationContext(),"Image Change",100).show();
@@ -135,7 +138,7 @@ public class MainActivity extends Activity implements android.view.GestureDetect
         }
     }
 
-
+    /**Method to change an image (background too)*/
     public void ParametersImage(){
         ImageSwipe.setImageResource(mDraw[gesture]);
         Li.setBackgroundColor(Color.parseColor(mColor[gesture]));
