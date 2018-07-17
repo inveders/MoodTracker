@@ -1,12 +1,14 @@
 package com.mood.gnimadi.alexandra.moodtracker.Controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -146,6 +148,9 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     }
 
+    public void LogoHistory (View view) {
+        startActivity(new Intent(this, HistoryActivity.class));
+    }
 
 }
 

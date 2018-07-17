@@ -51,9 +51,6 @@
         android:background="@drawable/ic_history_black"
         android:onClick="LogoHistory"/>
 
-
-        />
-
 </RelativeLayout>
 
 
