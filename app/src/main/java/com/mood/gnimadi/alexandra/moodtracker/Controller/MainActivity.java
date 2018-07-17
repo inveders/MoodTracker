@@ -9,7 +9,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.mood.gnimadi.alexandra.moodtracker.R;
 
@@ -53,7 +52,7 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     @Override
     public void onShowPress(MotionEvent motionEvent) {
-       // Toast.makeText(getApplicationContext(),"OnShow Press",100).show();
+        // Toast.makeText(getApplicationContext(),"OnShow Press",100).show();
 
     }
 
@@ -73,7 +72,7 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     @Override
     public void onLongPress(MotionEvent motionEvent) {
-       // Toast.makeText(getApplicationContext(),"LongPress",100).show();
+        // Toast.makeText(getApplicationContext(),"LongPress",100).show();
 
     }
 
@@ -146,6 +145,7 @@ public class MainActivity extends Activity implements android.view.GestureDetect
         preferences.edit().putInt("Mood", gesture);
 
     }
+
 
 }
 
