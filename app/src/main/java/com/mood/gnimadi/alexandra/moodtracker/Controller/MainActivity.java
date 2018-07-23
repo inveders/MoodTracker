@@ -1,6 +1,7 @@
 package com.mood.gnimadi.alexandra.moodtracker.Controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -9,8 +10,12 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.mood.gnimadi.alexandra.moodtracker.R;
 
@@ -36,12 +41,34 @@ public class MainActivity extends Activity implements android.view.GestureDetect
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //Configuration for the swipe
        ImageSwipe = findViewById(R.id.draw);
        Li= findViewById(R.id.relativelayout);
        ImageSwipe.setImageResource(mDraw[gesture]);
        mGestureDetector = new GestureDetector(this, this);
-       //setContentView(imageSwipe);
+       //Configuration for the comment
+        ImageButton mBtnComment = findViewById(R.id.btnComment);
+        mBtnComment.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view){
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.comment, null);
+                EditText mComment = mView.findViewById(R.id.textComment);
+                Button mValidComment = mView.findViewById(R.id.validComment);
+
+                mValidComment.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public  void onClick(View view){
+                        Toast.makeText(MainActivity.this,"Comment is ok",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                mBuilder.setView(mView);
+                AlertDialog dialog = mBuilder.create();
+                dialog.show();
+            }
+        });
 
     }
 
@@ -150,6 +177,11 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     public void LogoHistory (View view) {
         startActivity(new Intent(this, HistoryActivity.class));
+
+    }
+
+    public void LogoComment (View view) {
+        
     }
 
 }
