@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.mood.gnimadi.alexandra.moodtracker.Model.DatabaseManager;
 import com.mood.gnimadi.alexandra.moodtracker.R;
 
 
@@ -24,6 +25,7 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     private GestureDetector mGestureDetector;
     private int gesture=3;
+    private DatabaseManager databaseManager;
 
     int[] mDraw = {
             R.drawable.smiley_sad,
@@ -54,13 +56,17 @@ public class MainActivity extends Activity implements android.view.GestureDetect
             public void onClick(View view){
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.comment, null);
-                EditText mComment = mView.findViewById(R.id.textComment);
-                Button mValidComment = mView.findViewById(R.id.validComment);
+                EditText mTextComment = (EditText) mView.findViewById(R.id.textComment);
+                final String stringTextComment = mTextComment.getText().toString();
+                databaseManager = new DatabaseManager(this);
+                Button mValidComment = (Button) mView.findViewById(R.id.validComment);
 
                 mValidComment.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public  void onClick(View view){
                         Toast.makeText(MainActivity.this,"Comment is ok",Toast.LENGTH_SHORT).show();
+                        databaseManager.insertComment(stringTextComment);
+                        databaseManager.close();
                     }
                 });
 
