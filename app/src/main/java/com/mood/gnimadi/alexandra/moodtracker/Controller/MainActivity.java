@@ -3,6 +3,7 @@ package com.mood.gnimadi.alexandra.moodtracker.Controller;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,7 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mood.gnimadi.alexandra.moodtracker.Model.DatabaseComment;
+import com.mood.gnimadi.alexandra.moodtracker.Model.MoodAndComment;
 import com.mood.gnimadi.alexandra.moodtracker.R;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 public class MainActivity extends AppCompatActivity implements android.view.GestureDetector.OnGestureListener {
@@ -26,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     private int gesture=3;
     private DatabaseComment databaseComment;
 
+
+    MoodAndComment momo = new MoodAndComment(0,null,0,0);
 
     int[] mDraw = {
             R.drawable.smiley_sad,
@@ -37,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
 
     ImageView ImageSwipe;
     RelativeLayout Li;
-    private String DayComment;
+
 
 
     @Override
@@ -75,11 +82,11 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
                 mValidComment.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public  void onClick(View view){
-                        Toast.makeText(MainActivity.this,"Comment is ok",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this,"Commenta is ok",Toast.LENGTH_SHORT).show();
                         databaseComment.insertTable(stringTextComment,gesture);
                         databaseComment.close();
                         dialog.cancel();
-                        String DayOfComment = stringTextComment.toString();
+
 
 
                     }
@@ -134,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
 
     /**Method onFling is use to detect the vertical swipe and choode the good action (gesture++ or gesture--)
      * This method permit too to disabled horizontal swipe*/
+
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
@@ -171,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     }
     /**Method to call a changement of the image
      * This method is placed into the gestures detector methods*/
+
     public void Image_Change() {
 
         //Toast.makeText(getApplicationContext(),"Image Change",100).show();
@@ -194,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     }
 
     /**Method to change an image (background too) and add the mood in the SQLite database*/
+
     public void ParametersImage(){
         ImageSwipe.setImageResource(mDraw[gesture]);
         Li.setBackgroundColor(Color.parseColor(mColor[gesture]));
@@ -208,19 +218,46 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     }
 
    /**Put the mood in the SQLite database*/
+
+
     public void MoodStatusInsertion(){
 
-        //Récuper la valeur de mon tableau ici pour la colonne commentaire et voir si c'est null ou pas.
-        if (DayComment==null) {
-            databaseComment.insertTable(DayComment, gesture);
-            Toast.makeText(MainActivity.this, "Gesture insert is ok", Toast.LENGTH_SHORT).show();
-            databaseComment.close();
+
+        Log.d("DEBUG","MoodStatus presque");
+
+        final Calendar now = GregorianCalendar.getInstance();
+        final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
+
+       int todayGo = momo.getDayOfComment();
+
+        // for(int i = 0; i<databaseComment.manipulateTable().size();i++)
+                Log.d("DEBUG","ok Mood status");
+                //System.out.println(moodAndCommentList.get(i));*/
+
+
+        if(dayNumber==26){
+
+            Toast.makeText(MainActivity.this, "WORKS", Toast.LENGTH_SHORT).show();
         }
-        else {
-            databaseComment.updateTable(DayComment, gesture);
-            Toast.makeText(MainActivity.this, "Gesture update is ok", Toast.LENGTH_SHORT).show();
-            databaseComment.close();
+        else{
+            Toast.makeText(MainActivity.this, "NONO", Toast.LENGTH_SHORT).show();
         }
+
+
+
+        /*
+        if (true)
+            //Récuper la valeur de mon tableau ici pour la colonne commentaire et voir si c'est null ou pas.
+            if (==null) {
+                databaseComment.insertTable(DayComment, gesture);
+                Toast.makeText(MainActivity.this, "Gesture insert is ok", Toast.LENGTH_SHORT).show();
+                databaseComment.close();
+            }
+            else {
+                databaseComment.updateTable(DayComment, gesture);
+                Toast.makeText(MainActivity.this, "Gesture update is ok", Toast.LENGTH_SHORT).show();
+                databaseComment.close();
+            }*/
 
 
     }
