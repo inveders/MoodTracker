@@ -1,11 +1,10 @@
 package com.mood.gnimadi.alexandra.moodtracker.Controller;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -17,15 +16,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.mood.gnimadi.alexandra.moodtracker.Model.DatabaseManager;
+import com.mood.gnimadi.alexandra.moodtracker.Model.DatabaseComment;
 import com.mood.gnimadi.alexandra.moodtracker.R;
 
 
-public class MainActivity extends Activity implements android.view.GestureDetector.OnGestureListener {
+public class MainActivity extends AppCompatActivity implements android.view.GestureDetector.OnGestureListener {
 
     private GestureDetector mGestureDetector;
     private int gesture=3;
-    private DatabaseManager databaseManager;
+    private DatabaseComment databaseComment;
+
 
     int[] mDraw = {
             R.drawable.smiley_sad,
@@ -37,42 +37,63 @@ public class MainActivity extends Activity implements android.view.GestureDetect
 
     ImageView ImageSwipe;
     RelativeLayout Li;
+    private String DayComment;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //Configuration for the swipe
        ImageSwipe = findViewById(R.id.draw);
        Li= findViewById(R.id.relativelayout);
        ImageSwipe.setImageResource(mDraw[gesture]);
        mGestureDetector = new GestureDetector(this, this);
+
+
        //Configuration for the comment
-        ImageButton mBtnComment = findViewById(R.id.btnComment);
+        ImageButton mBtnComment = (ImageButton) findViewById(R.id.btnComment);
+        databaseComment = new DatabaseComment(this);
         mBtnComment.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view){
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.comment, null);
                 EditText mTextComment = (EditText) mView.findViewById(R.id.textComment);
                 final String stringTextComment = mTextComment.getText().toString();
-                databaseManager = new DatabaseManager(this);
                 Button mValidComment = (Button) mView.findViewById(R.id.validComment);
+                Button mCancelComment = (Button) mView.findViewById(R.id.cancelComment);
+
+
+                mBuilder.setView(mView);
+                final AlertDialog dialog = mBuilder.create();
+                Log.d("DEBUG", "ALertDialog");
+                dialog.show();
 
                 mValidComment.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public  void onClick(View view){
                         Toast.makeText(MainActivity.this,"Comment is ok",Toast.LENGTH_SHORT).show();
-                        databaseManager.insertComment(stringTextComment);
-                        databaseManager.close();
+                        databaseComment.insertTable(stringTextComment,gesture);
+                        databaseComment.close();
+                        dialog.cancel();
+                        String DayOfComment = stringTextComment.toString();
+
+
                     }
                 });
 
-                mBuilder.setView(mView);
-                AlertDialog dialog = mBuilder.create();
-                dialog.show();
+                mCancelComment.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public  void onClick(View view){
+                        Toast.makeText(MainActivity.this,"Cancel is ok",Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+
+
+                    }
+                });
             }
         });
 
@@ -172,23 +193,38 @@ public class MainActivity extends Activity implements android.view.GestureDetect
         }
     }
 
-    /**Method to change an image (background too)*/
+    /**Method to change an image (background too) and add the mood in the SQLite database*/
     public void ParametersImage(){
         ImageSwipe.setImageResource(mDraw[gesture]);
         Li.setBackgroundColor(Color.parseColor(mColor[gesture]));
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        preferences.edit().putInt("Mood", gesture);
+        MoodStatusInsertion();
 
     }
 
+    /**Open the History Activity*/
     public void LogoHistory (View view) {
         startActivity(new Intent(this, HistoryActivity.class));
 
     }
 
-    public void LogoComment (View view) {
-        
+   /**Put the mood in the SQLite database*/
+    public void MoodStatusInsertion(){
+
+        //Récuper la valeur de mon tableau ici pour la colonne commentaire et voir si c'est null ou pas.
+        if (DayComment==null) {
+            databaseComment.insertTable(DayComment, gesture);
+            Toast.makeText(MainActivity.this, "Gesture insert is ok", Toast.LENGTH_SHORT).show();
+            databaseComment.close();
+        }
+        else {
+            databaseComment.updateTable(DayComment, gesture);
+            Toast.makeText(MainActivity.this, "Gesture update is ok", Toast.LENGTH_SHORT).show();
+            databaseComment.close();
+        }
+
+
     }
+
 
 }
 
