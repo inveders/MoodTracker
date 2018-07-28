@@ -3,7 +3,6 @@ package com.mood.gnimadi.alexandra.moodtracker.Controller;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,10 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mood.gnimadi.alexandra.moodtracker.Model.DatabaseComment;
-import com.mood.gnimadi.alexandra.moodtracker.Model.MoodAndComment;
 import com.mood.gnimadi.alexandra.moodtracker.R;
 
 import java.util.Calendar;
@@ -28,11 +27,9 @@ import java.util.GregorianCalendar;
 public class MainActivity extends AppCompatActivity implements android.view.GestureDetector.OnGestureListener {
 
     private GestureDetector mGestureDetector;
-    private int gesture=3;
+    public int gesture=3;
     private DatabaseComment databaseComment;
-
-
-    MoodAndComment momo = new MoodAndComment(0,null,0,0);
+    public TextView mTextTest;
 
     int[] mDraw = {
             R.drawable.smiley_sad,
@@ -46,21 +43,20 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     RelativeLayout Li;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Configuration for the swipe
+       /**Configuration for the swipe*/
        ImageSwipe = findViewById(R.id.draw);
        Li= findViewById(R.id.relativelayout);
        ImageSwipe.setImageResource(mDraw[gesture]);
        mGestureDetector = new GestureDetector(this, this);
+       mTextTest = findViewById(R.id.textTest);
 
-
-       //Configuration for the comment
-        ImageButton mBtnComment = (ImageButton) findViewById(R.id.btnComment);
+       /**Configuration for the comment*/
+        ImageButton mBtnComment = findViewById(R.id.btnComment);
         databaseComment = new DatabaseComment(this);
         mBtnComment.setOnClickListener(new View.OnClickListener(){
 
@@ -68,22 +64,27 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
             public void onClick(View view){
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.comment, null);
-                EditText mTextComment = (EditText) mView.findViewById(R.id.textComment);
+                EditText mTextComment = mView.findViewById(R.id.textComment);
                 final String stringTextComment = mTextComment.getText().toString();
-                Button mValidComment = (Button) mView.findViewById(R.id.validComment);
-                Button mCancelComment = (Button) mView.findViewById(R.id.cancelComment);
+                Button mValidComment = mView.findViewById(R.id.validComment);
+                Button mCancelComment = mView.findViewById(R.id.cancelComment);
+
+
 
 
                 mBuilder.setView(mView);
                 final AlertDialog dialog = mBuilder.create();
-                Log.d("DEBUG", "ALertDialog");
+
                 dialog.show();
 
                 mValidComment.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public  void onClick(View view){
+                        final Calendar now = GregorianCalendar.getInstance();
+                        final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
+
                         Toast.makeText(MainActivity.this,"Commenta is ok",Toast.LENGTH_SHORT).show();
-                        databaseComment.insertTable(stringTextComment,gesture);
+                        databaseComment.insertTable(stringTextComment,gesture,dayNumber);
                         databaseComment.close();
                         dialog.cancel();
 
@@ -146,24 +147,24 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
         if (e1.getX() < e2.getX()) {
-            Log.d("DEBUG", "Left to Right swipe performed");
+            Log.d("DABAGO", "Left to Right swipe performed");
 
 
         }
 
         if (e1.getX() > e2.getX()) {
-            Log.d("DEBUG", "Right to Left swipe performed");
+            Log.d("DABAGO", "Right to Left swipe performed");
 
         }
 
         if (e1.getY() < e2.getY()) {
-            Log.d("DEBUG", "Up to Down swipe performed");
+            Log.d("DABAGO", "Up to Down swipe performed");
             gesture--;
             Image_Change();
         }
 
         if (e1.getY() > e2.getY()) {
-            Log.d("DEBUG", "Down to Up swipe performed");
+            Log.d("DABAGO", "Down to Up swipe performed");
             gesture++;
             Image_Change();
         }
@@ -182,21 +183,21 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
 
     public void Image_Change() {
 
-        //Toast.makeText(getApplicationContext(),"Image Change",100).show();
+        Log.d("DABAGO", "Image change");
+        if (gesture<5 && gesture >=0) ParametersImage();
 
-        if (gesture<5 && gesture >=0) {
-            ParametersImage();
 
-        }
 
         else if (gesture >=5) {
             gesture = 0;
+
             ParametersImage();
-            //getDrawable(gesture);
+
 
         }
         else if (gesture <0){
             gesture = 4;
+
             ParametersImage();
 
         }
@@ -205,60 +206,18 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     /**Method to change an image (background too) and add the mood in the SQLite database*/
 
     public void ParametersImage(){
+        final Calendar now = GregorianCalendar.getInstance();
+        final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
         ImageSwipe.setImageResource(mDraw[gesture]);
         Li.setBackgroundColor(Color.parseColor(mColor[gesture]));
-        MoodStatusInsertion();
+        Log.d("DABAGO", "ParameterImage");
+        databaseComment.MoodStatusInsertion(mTextTest,gesture,dayNumber);
 
     }
 
     /**Open the History Activity*/
     public void LogoHistory (View view) {
         startActivity(new Intent(this, HistoryActivity.class));
-
-    }
-
-   /**Put the mood in the SQLite database*/
-
-
-    public void MoodStatusInsertion(){
-
-
-        Log.d("DEBUG","MoodStatus presque");
-
-        final Calendar now = GregorianCalendar.getInstance();
-        final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
-
-       int todayGo = momo.getDayOfComment();
-
-        // for(int i = 0; i<databaseComment.manipulateTable().size();i++)
-                Log.d("DEBUG","ok Mood status");
-                //System.out.println(moodAndCommentList.get(i));*/
-
-
-        if(dayNumber==26){
-
-            Toast.makeText(MainActivity.this, "WORKS", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(MainActivity.this, "NONO", Toast.LENGTH_SHORT).show();
-        }
-
-
-
-        /*
-        if (true)
-            //Récuper la valeur de mon tableau ici pour la colonne commentaire et voir si c'est null ou pas.
-            if (==null) {
-                databaseComment.insertTable(DayComment, gesture);
-                Toast.makeText(MainActivity.this, "Gesture insert is ok", Toast.LENGTH_SHORT).show();
-                databaseComment.close();
-            }
-            else {
-                databaseComment.updateTable(DayComment, gesture);
-                Toast.makeText(MainActivity.this, "Gesture update is ok", Toast.LENGTH_SHORT).show();
-                databaseComment.close();
-            }*/
-
 
     }
 

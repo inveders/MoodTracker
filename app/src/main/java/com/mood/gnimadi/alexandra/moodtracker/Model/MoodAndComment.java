@@ -1,18 +1,21 @@
 package com.mood.gnimadi.alexandra.moodtracker.Model;
 
+import android.util.Log;
+
 public class MoodAndComment {
 
     private int idComment ;
     private String textComment;
     private int gesture;
-    private int dayOfComment;
+    private int dayOfMood;
 
 
 
-    public MoodAndComment(int idComment, String textComment, int gesture, int dayOfComment) {
+    public MoodAndComment(int idComment, String textComment, int gesture, int dayOfMood) {
         this.setIdComment(idComment);
         this.setTextComment(textComment);
         this.setGesture(gesture);
+        this.setDayOfMood(dayOfMood);
     }
 
     public int getIdComment() {
@@ -32,6 +35,7 @@ public class MoodAndComment {
     }
 
     public int getGesture() {
+        Log.d("DABAGO", "JVOIS PAS DE QUOI TU PARLES");
         return gesture;
     }
 
@@ -39,13 +43,14 @@ public class MoodAndComment {
         this.gesture = gesture;
     }
 
-    public int getDayOfComment() {
+    public int getDayOfMood() {
 
-        return dayOfComment;
+
+        return dayOfMood;
     }
 
-    public void setDayOfComment(int dayOfComment) {
-        this.dayOfComment = dayOfComment;
+    public void setDayOfMood(int dayOfMood) {
+        this.dayOfMood = dayOfMood;
     }
 
     @Override
@@ -53,10 +58,4 @@ public class MoodAndComment {
         return textComment;
     }
 
-   /* public void MyZoneId() {
-        /**Get the current ZoneId
-
-        ZoneId.systemDefault();
-        ZoneId.systemDefault().getRules();
-    }*/
 }
