@@ -8,7 +8,8 @@
      android:layout_height="match_parent"
      tools:context=".Controller.HistoryActivity"
      android:orientation="vertical"
-     android:weightSum="7">
+     android:weightSum="7"
+    android:id="@+id/linearLayout">
 
 
     <RelativeLayout

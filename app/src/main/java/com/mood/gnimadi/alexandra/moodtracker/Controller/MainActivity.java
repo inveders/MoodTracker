@@ -18,10 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mood.gnimadi.alexandra.moodtracker.Model.DatabaseComment;
+import com.mood.gnimadi.alexandra.moodtracker.Model.MoodAndComment;
 import com.mood.gnimadi.alexandra.moodtracker.R;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements android.view.GestureDetector.OnGestureListener {
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     public int gesture=3;
     private DatabaseComment databaseComment;
     public TextView mTextTest;
+    public String stringTextComment ;
 
     int[] mDraw = {
             R.drawable.smiley_sad,
@@ -42,30 +45,72 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
     ImageView ImageSwipe;
     RelativeLayout Li;
 
+    final Calendar now = GregorianCalendar.getInstance();
+    final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /**Link with the database*/
+
+        databaseComment = new DatabaseComment(this);
+        List<MoodAndComment> dayTable ;
+        dayTable = databaseComment.manipulateTable();
+        int lastValue = dayTable.size();
+        int indexLastValue = lastValue-1;
+        int j = dayTable.get(indexLastValue).getGesture();
 
        /**Configuration for the swipe*/
        ImageSwipe = findViewById(R.id.draw);
        Li= findViewById(R.id.relativelayout);
-       ImageSwipe.setImageResource(mDraw[gesture]);
+        ImageSwipe.setImageResource(mDraw[0]);
+        if (j==0) {
+            ImageSwipe.setImageResource(mDraw[0]);
+            Li.setBackgroundColor(Color.parseColor(mColor[0]));
+        }
+
+        else if (j==1) {
+            ImageSwipe.setImageResource(mDraw[1]);
+            Li.setBackgroundColor(Color.parseColor(mColor[1]));
+        }
+        else if (j==2) {
+            ImageSwipe.setImageResource(mDraw[2]);
+            Li.setBackgroundColor(Color.parseColor(mColor[2]));
+        }
+        else if (j==4) {
+            ImageSwipe.setImageResource(mDraw[4]);
+            Li.setBackgroundColor(Color.parseColor(mColor[4]));
+        }
+        else if (dayTable.get(indexLastValue).getDayOfMood()== dayNumber-1){
+            ImageSwipe.setImageResource(mDraw[3]);
+            Li.setBackgroundColor(Color.parseColor(mColor[3]));
+        }
+        else {
+            ImageSwipe.setImageResource(mDraw[3]);
+            Li.setBackgroundColor(Color.parseColor(mColor[3]));
+        }
+
+        /**Configuration for the swipe*/
+
        mGestureDetector = new GestureDetector(this, this);
        mTextTest = findViewById(R.id.textTest);
+       mTextTest.setText(String.valueOf(j));
 
        /**Configuration for the comment*/
         ImageButton mBtnComment = findViewById(R.id.btnComment);
-        databaseComment = new DatabaseComment(this);
+
+
+
         mBtnComment.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view){
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.comment, null);
-                EditText mTextComment = mView.findViewById(R.id.textComment);
-                final String stringTextComment = mTextComment.getText().toString();
+                final EditText mTextComment = mView.findViewById(R.id.textComment);
+
+              //  final String stringTextComment = mTextComment.getText().toString();
                 Button mValidComment = mView.findViewById(R.id.validComment);
                 Button mCancelComment = mView.findViewById(R.id.cancelComment);
 
@@ -80,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
                     public  void onClick(View view){
                         final Calendar now = GregorianCalendar.getInstance();
                         final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
-
+                        stringTextComment = mTextComment.getText().toString();
                         Toast.makeText(MainActivity.this,"Commenta is ok",Toast.LENGTH_SHORT).show();
                         databaseComment.CommentStatusInsertion(stringTextComment,gesture,dayNumber);
                         databaseComment.close();
@@ -209,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
         ImageSwipe.setImageResource(mDraw[gesture]);
         Li.setBackgroundColor(Color.parseColor(mColor[gesture]));
         Log.d("DABAGO", "ParameterImage");
-        databaseComment.MoodStatusInsertion(mTextTest,gesture,dayNumber);
+        databaseComment.MoodStatusInsertion(mTextTest,gesture,dayNumber,stringTextComment);
 
     }
 
