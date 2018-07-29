@@ -1,17 +1,24 @@
 package com.mood.gnimadi.alexandra.moodtracker.Model;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import static android.app.AlarmManager.ELAPSED_REALTIME;
 
 public class DatabaseComment extends SQLiteOpenHelper {
 
@@ -20,7 +27,7 @@ public class DatabaseComment extends SQLiteOpenHelper {
     public static final String DATABASE_COMMENT="textComment";
     public static final String DATABASE_MOOD="gesture";
     public static final String DATABASE_DATE="dayOfMood";
-    private static final int DATABASE_VERSION=37;
+    private static final int DATABASE_VERSION=38;
     private static Context context;
 
     /**Creating the columns for the database of Comments*/
@@ -69,13 +76,32 @@ public class DatabaseComment extends SQLiteOpenHelper {
         Log.d("DABAGO","insertTable invoked");
     }
 
-    public void updateTableComment(int gesture,int indexLastValue){
+    public void insertComment(String stringTextComment){
 
-        String strSql="UPDATE Comment SET gesture=gesture WHERE idComment=indexLastValue ";
-        //db.execSQL(strSql);
-        //this.getWritableDatabase().execSQL(strSql);
-        Log.d("DABAGO","updateTable invoked");
+        String strSql="insert into Comment (textComment) values ('"+stringTextComment+"')";
+        this.getWritableDatabase().execSQL(strSql);
+        Log.d("DABAGO","insertComment invoked");
     }
+
+    public void updateMood(int gesture,int indexLastValue){
+
+        String strSql="UPDATE Comment SET gesture="+gesture+" WHERE idComment="+indexLastValue;
+        //db.execSQL(strSql);
+        this.getWritableDatabase().execSQL(strSql);
+        Log.d("DABAGO","updateMood invoked");
+
+    }
+
+    public void updateComment(String stringTextComment,int indexLastValue){
+
+        String strSql="UPDATE Comment SET textComment="+stringTextComment+" WHERE idComment="+indexLastValue;
+        Log.d("DABAGO","on rentre dans updtae comment");
+        //db.execSQL(strSql);
+        this.getWritableDatabase().execSQL(strSql);
+        Log.d("DABAGO","updateComment invoked");
+
+    }
+
 
 
     public List<MoodAndComment> manipulateTable(){
@@ -102,7 +128,10 @@ public class DatabaseComment extends SQLiteOpenHelper {
 
     }
 
-
+    private static boolean isNullOrBlank(String s)
+    {
+        return (s==null || s.trim().equals(""));
+    }
 
     /**Put the mood in the SQLite database*/
     public void MoodStatusInsertion(TextView mTextTest, int gesture,int dayOfMood){
@@ -129,10 +158,10 @@ public class DatabaseComment extends SQLiteOpenHelper {
             Log.d("DABAGO", "FIRST INSERTION");
         }
         else {
-            mTextTest.setText("C'est pas vide");
+            mTextTest.setText(String.valueOf(gesture));
             if(dayTable.get(indexLastValue).getDayOfMood() == dayNumber) {
                 Log.d("DABAGO", "UPDATE SWIPE");
-                updateTableComment(gesture,indexLastValue);
+                updateMood(gesture,indexLastValue);
             }
             else if (dayTable.get(indexLastValue).getDayOfMood()== dayNumber-1) {
                 Log.d("DABAGO", "INSERTION SWIPE");
@@ -143,5 +172,67 @@ public class DatabaseComment extends SQLiteOpenHelper {
 
     }
 
+    public void CommentStatusInsertion (String stringTextComment, int gesture, int dayOfMood){
+        final Calendar now = GregorianCalendar.getInstance();
+        final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
 
+        //insertTable(null, gesture,dayOfMood);
+        Log.d("DABAGO", "MoodCommentInsertion");
+
+        List<MoodAndComment> dayTable ;
+        dayTable = manipulateTable();
+
+        Cursor cursor = this.getReadableDatabase().query("Comment", new String[] {"idComment","textComment","gesture","dayOfMood"},null,null,null,null,null);
+
+        /**Define the line where we made modifications*/
+        int lastValue = dayTable.size();
+        int indexLastValue = lastValue-1;
+
+
+        if(!cursor.moveToFirst()){
+            // mTextTest.setText("C'est vide");
+            insertTable(null, gesture,dayOfMood);
+            Log.d("DABAGO", "FIRST INSERTION COMMENT AND ALL");
+        }
+        else {
+           // mTextTest.setText(String.valueOf(gesture));
+            if(dayTable.get(indexLastValue).getTextComment() == null) {
+                // mTextTest.setText(String.valueOf(gesture));
+                Log.d("DABAGO", "INSERTION SWIPE");
+                insertComment(stringTextComment);
+            }
+            else if (dayTable.get(indexLastValue).getTextComment() != null){
+                Log.d("DABAGO", "UPDATE COMMENT");
+                updateComment(stringTextComment,indexLastValue);
+            }
+        }
+
+
+
+    }
+
+    public EditText showComment (EditText mComment){
+
+        List<MoodAndComment> dayTable ;
+        dayTable = manipulateTable();
+
+
+        /**Define the line where we made modifications*/
+        int lastValue = dayTable.size();
+        int indexLastValue = lastValue-1;
+
+        if(isNullOrBlank(dayTable.get(indexLastValue).getTextComment())){
+            // mTextTest.setText("C'est vide");
+            mComment.setText("");
+        }
+        else if (dayTable.get(indexLastValue).getTextComment().equals("null"))
+            mComment.setText("");
+        else {
+            //A ENLEVER ENSUITE
+            mComment.setText(dayTable.get(indexLastValue).getTextComment());
+        }
+
+
+        return mComment;
+    }
 }

@@ -69,13 +69,11 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
                 Button mValidComment = mView.findViewById(R.id.validComment);
                 Button mCancelComment = mView.findViewById(R.id.cancelComment);
 
-
-
-
                 mBuilder.setView(mView);
                 final AlertDialog dialog = mBuilder.create();
 
                 dialog.show();
+                databaseComment.showComment(mTextComment);
 
                 mValidComment.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
                         final int dayNumber = now.get(Calendar.DAY_OF_MONTH);
 
                         Toast.makeText(MainActivity.this,"Commenta is ok",Toast.LENGTH_SHORT).show();
-                        databaseComment.insertTable(stringTextComment,gesture,dayNumber);
+                        databaseComment.CommentStatusInsertion(stringTextComment,gesture,dayNumber);
                         databaseComment.close();
                         dialog.cancel();
 
