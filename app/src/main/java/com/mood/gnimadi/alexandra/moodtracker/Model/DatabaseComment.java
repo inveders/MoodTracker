@@ -5,13 +5,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.mood.gnimadi.alexandra.moodtracker.Controller.MainActivity;
+import com.mood.gnimadi.alexandra.moodtracker.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -97,7 +106,7 @@ public class DatabaseComment extends SQLiteOpenHelper {
         String strSql="UPDATE Comment SET textComment="+stringTextComment+" WHERE idComment="+indexLastValue;
         Log.d("DABAGO","on rentre dans updtae comment");
         //db.execSQL(strSql);
-        this.getWritableDatabase().execSQL(strSql);
+       // this.getWritableDatabase().execSQL(strSql);
         Log.d("DABAGO","updateComment invoked");
 
     }
@@ -235,4 +244,12 @@ public class DatabaseComment extends SQLiteOpenHelper {
 
         return mComment;
     }
+
+    public void addHistory (){
+
+    }
+
+
+
+
 }

@@ -19,7 +19,6 @@ public class myAlarm extends BroadcastReceiver {
     @Override
     public void onReceive(Context context,Intent intend){
 
-
 /*
         if (dayTable.get(indexLastValue).getDayOfMood()!= dayNumber) {
         Log.d("DABAGO", "INSERTION SWIPE");

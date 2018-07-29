@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity implements android.view.Gest
 
     /**Open the History Activity*/
     public void LogoHistory (View view) {
+        Log.d("DABAGO", "Passage d'une activité à une autre");
         startActivity(new Intent(this, HistoryActivity.class));
-
     }
 
 
