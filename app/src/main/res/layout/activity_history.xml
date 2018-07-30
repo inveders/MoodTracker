@@ -32,9 +32,11 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_comment_black_48px"
             android:visibility="invisible"
-            />
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
 
@@ -59,9 +61,11 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_comment_black_48px"
             android:visibility="invisible"
-            />
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -85,9 +89,11 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_comment_black_48px"
             android:visibility="invisible"
-            />
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -111,8 +117,11 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_comment_black_48px"
             android:visibility="invisible"
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true"
             />
     </RelativeLayout>
 
@@ -137,8 +146,11 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/ic_comment_black_48px"
             android:visibility="invisible"
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true"
             />
     </RelativeLayout>
 
@@ -165,7 +177,9 @@
             android:layout_marginEnd="20dp"
             android:background="@drawable/ic_comment_black_48px"
             android:visibility="invisible"
-            />
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -190,6 +204,9 @@
             android:layout_marginEnd="20dp"
             android:background="@drawable/ic_comment_black_48px"
             android:visibility="invisible"
+            android:contentDescription="@string/app_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
             />
 
     </RelativeLayout>
